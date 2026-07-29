@@ -38,11 +38,14 @@ const Login = (username, password) => {
 
     const user = users.find(u => u.username === username && u.password === password)
 
-    if(!user){
-        alert("Invalid username or password")
-    }
+     if (user) {
+        
+        const sessionUser = { username: user.username, currency: user.currency };
+        localStorage.setItem('user', JSON.stringify(sessionUser));
+        return { success: true, message: "Login successful!" };
 
-    return {
-        success: true
+    } else {
+        
+        return { success: false, message: "Invalid username or password." };
     }
 }
