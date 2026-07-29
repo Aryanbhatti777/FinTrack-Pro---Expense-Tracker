@@ -27,3 +27,22 @@ const Register = (username, password) => {
 
     return { success: true, message: "Registered successfully, you can login now."}
 }
+
+const Login = (username, password) => {
+
+    if(username.trim() === "" || password.trim() === ""){
+        alert("All fields are mandatory")
+    }
+
+    const users = JSON.parse(localStorage.getItem("users"))
+
+    const user = users.find(u => u.username === username && u.password === password)
+
+    if(!user){
+        alert("Invalid username or password")
+    }
+
+    return {
+        success: true
+    }
+}
