@@ -27,7 +27,25 @@
         <p style="margin-top: 10px; font-size: 18px;">Already have an account? <a href="login.html">Login here</a></p>
     </div>
 
-    
+    <script src="auth.js"></script>
+
+    <script>
+
+        const form = document.querySelector("form")
+        form.addEventListener("submit", (e) => {
+            e.preventDefault()
+            const username = form.username.value
+            const password = form.password.value
+            const attempt = Register(username, password)
+
+            if(attempt.success){
+                form.username.value = ""
+                form.password.value = ""
+                alert(attempt.message)
+                window.location.replace("login.html")
+            }
+        })
+    </script>
 </body>
 
 </html>
