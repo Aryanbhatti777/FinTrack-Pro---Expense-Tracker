@@ -7,6 +7,10 @@
     <title>Register | FinTrack Pro</title>
     <link rel="stylesheet" href="auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="auth.js"></script>
+    <script>
+        authUser(false)
+    </script>
 </head>
 
 <body>
@@ -42,7 +46,7 @@
                 form.username.value = ""
                 form.password.value = ""
                 alert(attempt.message)
-                window.location.href = "login.html"
+                window.location.replace("login.html")
             }
         })
     </script>

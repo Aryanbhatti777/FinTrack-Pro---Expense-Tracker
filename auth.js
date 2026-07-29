@@ -1,4 +1,13 @@
+const authUser = (isSecurepage) => {
 
+    const user = localStorage.getItem("user")
+
+    if(isSecurepage && !user){
+        window.location.replace("login.html")
+    }else if(user && !isSecurepage){
+        window.location.replace("index.html")
+    }
+}
 
 const Register = (username, password) => {
 
@@ -34,7 +43,7 @@ const Login = (username, password) => {
         alert("All fields are mandatory")
     }
 
-    const users = JSON.parse(localStorage.getItem("users"))
+    const users = JSON.parse(localStorage.getItem("users")) || []
 
     const user = users.find(u => u.username === username && u.password === password)
 
@@ -45,7 +54,7 @@ const Login = (username, password) => {
         return { success: true, message: "Login successful!" };
 
     } else {
-        
+
         return { success: false, message: "Invalid username or password." };
     }
 }

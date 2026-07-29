@@ -7,6 +7,10 @@
     <title>Login | FinTrack Pro</title>
     <link rel="stylesheet" href="auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="auth.js"></script>
+    <script>
+        authUser(false)
+    </script>
 </head>
 
 <body>
@@ -40,7 +44,9 @@
             const attempt = Login(username, password)
 
             if(attempt.success){
-                window.location.href = "index.html";
+                window.location.replace("register.html");
+            }else{
+                alert(attempt.message)
             }
         })
     </script>
