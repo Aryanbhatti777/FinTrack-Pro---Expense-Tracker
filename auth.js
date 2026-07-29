@@ -58,3 +58,8 @@ const Login = (username, password) => {
         return { success: false, message: "Invalid username or password." };
     }
 }
+
+const Logout = () => {
+    localStorage.removeItem('user');
+    window.location.replace('login.html');
+}

@@ -35,17 +35,28 @@
             </div>
             <div>
                 <button class="add-btn" id="openAddModalBtn">
-                <i class="fa-solid fa-plus"></i> Add Transaction
-            </button>
+                    <i class="fa-solid fa-plus"></i> Add Transaction
+                </button>
             </div>
         </aside>
         <section>
-            <header>
-                
+            <header class="topbar">
+
+           
+                    <div class="user-info">
+                        <span class="name" id="topbarName">username</span>
+                    </div>
+
+
+                    <button id="logoutBtn" onclick="Logout()">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+               
             </header>
         </section>
     </main>
     <script src="auth.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
