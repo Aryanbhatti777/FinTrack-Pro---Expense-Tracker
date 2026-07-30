@@ -10,6 +10,11 @@ const displayBalance = document.querySelector("#displayBalance")
 const displayIncome = document.querySelector("#displayIncome")
 const displayExpense = document.querySelector("#displayExpense")
 const displayCount = document.querySelector("#displayCount")
+const resetBtn = document.querySelector("#resetDataBtn")
+let transactions = JSON.parse(localStorage.getItem(transactionStorageKey)) || []
+
+const searchInput = document.querySelector("#searchInput")
+const searchType = document.querySelector("#typeFilter")
 
 
 // make transaction form visible and hidden
@@ -58,6 +63,7 @@ form.addEventListener("submit", (e) => {
 
     if (description.trim() === "" || amount.trim() === "" || category.trim() === "") {
         alert("All fields are mandatory")
+        return
     }
 
     const newTransaction = {
@@ -68,8 +74,6 @@ form.addEventListener("submit", (e) => {
         transactionDate: tx_date,
         category
     }
-
-    const transactions = JSON.parse(localStorage.getItem(transactionStorageKey)) || []
 
     transactions.push(newTransaction)
 
@@ -83,18 +87,30 @@ form.addEventListener("submit", (e) => {
 
 })
 
-const updateUi = () => {
+// update ui
+
+const updateUi = (dataToShow = transactions) => {
 
     tableData.innerHTML = ""
-    const transactions = JSON.parse(localStorage.getItem(transactionStorageKey)) || []
+    
     const user = JSON.parse(localStorage.getItem("user"));
     const currency = user.currency || "$"
 
     let totalIncome = 0;
     let totalExpense = 0;
 
+    if(dataToShow.length === 0){
+        tableData.innerHTML = `
+    <tr>
+        <td colspan="5">
+            No Transactions.
+        </td>
+    </tr>
+`;
+    }
 
-    transactions.forEach(tx => {
+
+    dataToShow.forEach(tx => {
 
         if(tx.transactionType === "income"){
             totalIncome += Number(tx.amount)
@@ -106,28 +122,33 @@ const updateUi = () => {
         const sign = tx.transactionType === "income" ? "+" : "-"
         const tr = document.createElement("tr")
 
-        tr.innerHTML = `<tr>
-                        <td>${tx.transactionDate}</td>
-                        <td><strong>${tx.description}</strong></td>
-                        <td><span class="tag">${tx.category}</span></td>
-                        <td class="${color_class}">${sign}${currency}${tx.amount}</td>
-                        <td>
-                          <button
-                            class="action-btn btn-edit"
-                            onclick="editTransaction(${tx.id})"
-                          >
-                            <i class="fa-solid fa-pen"></i>
-                          </button>
-                          <button
-                            class="action-btn btn-delete"
-                            onclick="deleteTransaction(${tx.id})"
-                          >
-                            <i class="fa-solid fa-trash"></i>
-                          </button>
-                        </td>
-                      </tr>`
+        tr.innerHTML = `
+    <td>${tx.transactionDate}</td>
+    <td><strong>${tx.description}</strong></td>
+    <td>
+        <span class="tag">${tx.category}</span>
+    </td>
+    <td class="${color_class}">
+        ${sign}${currency}${tx.amount}
+    </td>
+    <td>
+        <button
+            class="action-btn btn-edit"
+            onclick="editTransaction(${tx.id})"
+        >
+            <i class="fa-solid fa-pen"></i>
+        </button>
 
-        tableData.append(tr)
+        <button
+            class="action-btn btn-delete"
+            onclick="deleteTransaction(${tx.id})"
+        >
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    </td>
+`;
+
+tableData.append(tr);
     })
 
     const balance = totalIncome - totalExpense
@@ -142,5 +163,38 @@ const updateUi = () => {
     displayCount.textContent = transactions.length
     
 }
+
+//reset data
+
+resetBtn.addEventListener("click", () => {
+    if(confirm("WARNING: This will delete all your transaction data permanently!")){
+        localStorage.removeItem(transactionStorageKey)
+        transactions = []
+    }else{
+        return
+    }
+    
+    updateUi()
+}) 
+
+//filters
+
+const applyFilter = () => {
+    const inputValue = searchInput.value.toLowerCase();
+    const typeValue = searchType.value;
+    
+    const filtered = transactions.filter(tx => {
+        const inputMatched = tx.description.toLowerCase().includes(inputValue) || tx.category.toLowerCase().includes(inputValue)
+
+        const typeMatched = (typeValue === "all") || (tx.transactionType === typeValue)
+        
+        return inputMatched && typeMatched
+    })
+
+    updateUi(filtered)
+}
+
+searchInput.addEventListener("input", applyFilter)
+searchType.addEventListener("change", applyFilter)
 
 updateUi()
