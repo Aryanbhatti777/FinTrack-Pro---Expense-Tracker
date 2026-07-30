@@ -17,6 +17,54 @@
 
 <body>
     <main>
+
+        <div class="add_transaction">
+            <div class="addtx-content">
+                <div class="form-top">
+                    <h3>Add Transaction</h3>
+                    <span class="close-modal">×</span>
+                </div>
+                <form id="transactionForm">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Type</label>
+                        <select id="txType" required="">
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Description</label>
+                        <input type="text" id="txDescription" placeholder="e.g. Amazon, Salary, Coffee" required="">
+                    </div>
+                    <div class="form-row" style="margin-bottom: 12px;">
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="txAmount" step="0.01" min="0" required="">
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="txDate" required="">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label>Category</label>
+                        <select id="txCategory" required="">
+                            <option value="" disabled="" selected="">Select a category</option>
+                            <option value="Food &amp; Dining">Food &amp; Dining</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Recharge &amp; Bills">Recharge &amp; Bills</option>
+                            <option value="Petrol &amp; Auto">Petrol &amp; Auto</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="txform-btn">Save Transaction</button>
+                </form>
+            </div>
+        </div>
+
         <aside>
             <div>
                 <div class="logo">
