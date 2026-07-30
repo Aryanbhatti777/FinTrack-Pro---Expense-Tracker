@@ -27,28 +27,28 @@
                 <form id="transactionForm">
                     <div class="form-group" style="margin-bottom: 12px;">
                         <label>Type</label>
-                        <select id="txType" required="">
+                        <select id="txType" required="" name="type">
                             <option value="expense">Expense</option>
                             <option value="income">Income</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 12px;">
                         <label>Description</label>
-                        <input type="text" id="txDescription" placeholder="e.g. Amazon, Salary, Coffee" required="">
+                        <input type="text" name="description" id="txDescription" placeholder="e.g. Amazon, Salary, Coffee" required="">
                     </div>
                     <div class="form-row" style="margin-bottom: 12px;">
                         <div class="form-group">
                             <label>Amount</label>
-                            <input type="number" id="txAmount" step="0.01" min="0" required="">
+                            <input type="number" name="amount" id="txAmount" step="0.01" min="0" required="">
                         </div>
                         <div class="form-group">
                             <label>Date</label>
-                            <input type="date" id="txDate" required="">
+                            <input type="date" name="Tdate" id="txDate" required="">
                         </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 12px;">
                         <label>Category</label>
-                        <select id="txCategory" required="">
+                        <select id="txCategory" required="" name="category">
                             <option value="" disabled="" selected="">Select a category</option>
                             <option value="Food &amp; Dining">Food &amp; Dining</option>
                             <option value="Shopping">Shopping</option>
@@ -160,7 +160,7 @@
                                     <option value="expense">Expense Only</option>
                                 </select>
                             </div>
-                            <div style="overflow-x: auto;">
+                            <div st   yle="overflow-x: auto;">
                                 <table>
                                     <thead>
                                         <tr>

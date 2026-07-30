@@ -42,7 +42,22 @@ body, html {
 }
 
 .dark-theme .chart-area{
-    background-color: black;
+    background-color: rgb(0, 0, 0);
+}
+
+.dark-theme .addtx-content{
+    background-color: rgb(11, 11, 11);
+}
+
+.dark-theme form input, .dark-theme form select {
+    background-color: rgb(24, 23, 23);
+    color: white
+}
+
+.dark-theme form button{
+    background-color: white;
+    color: black;
+    border: none
 }
 
 main {
