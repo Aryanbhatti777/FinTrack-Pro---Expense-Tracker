@@ -505,7 +505,7 @@ th{
 }
 
 td{
-    padding: 1rem;
+    padding: 1.2rem;
     font-size: 1rem;
     border-bottom: 1px solid #dbd7d7;
 }
@@ -519,9 +519,11 @@ td{
 }
 
 .btn-edit{
-    color: #1c3a5e
+    color: #1c3a5e;
+    font-size: 1rem;
 }
 
 .btn-delete{
-    color: red
+    color: red;
+    font-size: 1rem
 }

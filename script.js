@@ -12,17 +12,20 @@ const displayExpense = document.querySelector("#displayExpense")
 const displayCount = document.querySelector("#displayCount")
 const resetBtn = document.querySelector("#resetDataBtn")
 let transactions = JSON.parse(localStorage.getItem(transactionStorageKey)) || []
+let txFormBtn = document.querySelector(".txform-btn")
 const ctx = document.querySelector("#cashFlowChart")
-
 const searchInput = document.querySelector("#searchInput")
 const searchType = document.querySelector("#typeFilter")
 let chart = null
-
+let editingId = null
 
 // make transaction form visible and hidden
 
 addTransactionBtn.addEventListener("click", () => {
+    form.reset()
+    editingId = null
     txForm.style.display = "flex"
+    txFormBtn.innerText = "Save Transaction"
 })
 
 closeForm.addEventListener("click", () => {
@@ -68,8 +71,10 @@ form.addEventListener("submit", (e) => {
         return
     }
 
+    
+
     const newTransaction = {
-        id: Date.now(),
+        id: editingId ? editingId : Date.now(),
         transactionType: tx_type,
         description,
         amount,
@@ -77,7 +82,14 @@ form.addEventListener("submit", (e) => {
         category
     }
 
-    transactions.push(newTransaction)
+    if(editingId !== null){
+        transactions = transactions.map(tx => tx.id === editingId ? newTransaction : tx)
+        editingId = null
+    }else{
+        transactions.push(newTransaction)
+    }
+
+    
 
     localStorage.setItem(transactionStorageKey, JSON.stringify(transactions))
 
@@ -89,19 +101,48 @@ form.addEventListener("submit", (e) => {
 
 })
 
+// delete Transaction
+
+const deleteTransaction = (id) => {
+
+    if (confirm('Are you sure you want to delete this transaction?')) {
+        transactions = transactions.filter(tx => tx.id !== id);
+        updateUi();
+    }
+
+
+}
+
+// edit Transaction
+
+const editTransaction = (id) => {
+    const transaction = transactions.find(tx => tx.id === id)
+    editingId = transaction.id;
+    form.type.value = transaction.transactionType;
+    form.description.value = transaction.description;
+    form.amount.value = transaction.amount;
+    form.Tdate.value = transaction.transactionDate;
+    form.category.value = transaction.category
+
+    txFormBtn.innerText = "Update Transaction"
+    txForm.style.display = "flex"
+}
+
+
+
 // update ui
 
 const updateUi = (dataToShow = transactions) => {
 
     tableData.innerHTML = ""
-    
+
     const user = JSON.parse(localStorage.getItem("user"));
     const currency = user.currency || "$"
 
     let totalIncome = 0;
     let totalExpense = 0;
 
-    if(dataToShow.length === 0){
+    if (dataToShow.length === 0) {
         tableData.innerHTML = `
     <tr>
         <td colspan="5">
@@ -114,9 +155,9 @@ const updateUi = (dataToShow = transactions) => {
 
     dataToShow.forEach(tx => {
 
-        if(tx.transactionType === "income"){
+        if (tx.transactionType === "income") {
             totalIncome += Number(tx.amount)
-        }else{
+        } else {
             totalExpense += Number(tx.amount)
         }
 
@@ -150,13 +191,13 @@ const updateUi = (dataToShow = transactions) => {
     </td>
 `;
 
-tableData.append(tr);
+        tableData.append(tr);
     })
 
     const balance = totalIncome - totalExpense
 
-    displayBalance.textContent = `${balance<0 ? "-" : ""}${currency}${Math.abs(balance).toFixed(2)}`
-    
+    displayBalance.textContent = `${balance < 0 ? "-" : ""}${currency}${Math.abs(balance).toFixed(2)}`
+
 
     displayIncome.textContent = `${currency}${totalIncome.toFixed(2)}`
 
@@ -164,27 +205,29 @@ tableData.append(tr);
 
     displayCount.textContent = transactions.length
 
+    localStorage.setItem(transactionStorageKey, JSON.stringify(transactions));
+
     updateChart(totalIncome, totalExpense)
-    
+
 }
 
 // Chart 
 
 const updateChart = (income, expense) => {
-    if(chart) {chart.destroy()}
-    chart = new Chart(ctx,{
+    if (chart) { chart.destroy() }
+    chart = new Chart(ctx, {
         type: 'bar',
-        data:{
+        data: {
             labels: ["Income vs Expense"],
             datasets: [
-                {label: "Income", data: [income] , backgroundColor: '#166534', borderRadius: 4},
-                {label: "Expense", data:[expense], backgroundColor: '#991b1b', borderRadius: 4}
+                { label: "Income", data: [income], backgroundColor: '#166534', borderRadius: 4 },
+                { label: "Expense", data: [expense], backgroundColor: '#991b1b', borderRadius: 4 }
             ]
         },
         options: {
             responsive: true, maintainAspectRatio: false,
-            scales: {y: {beignAtZero: true}},
-            plugins: {legend: {position: 'top'}}
+            scales: { y: { beginAtZero: true } },
+            plugins: { legend: { position: 'top' } }
         }
     })
 }
@@ -192,27 +235,27 @@ const updateChart = (income, expense) => {
 //reset data
 
 resetBtn.addEventListener("click", () => {
-    if(confirm("WARNING: This will delete all your transaction data permanently!")){
+    if (confirm("WARNING: This will delete all your transaction data permanently!")) {
         localStorage.removeItem(transactionStorageKey)
         transactions = []
-    }else{
+    } else {
         return
     }
-    
+
     updateUi()
-}) 
+})
 
 //filters
 
 const applyFilter = () => {
     const inputValue = searchInput.value.toLowerCase();
     const typeValue = searchType.value;
-    
+
     const filtered = transactions.filter(tx => {
         const inputMatched = tx.description.toLowerCase().includes(inputValue) || tx.category.toLowerCase().includes(inputValue)
 
         const typeMatched = (typeValue === "all") || (tx.transactionType === typeValue)
-        
+
         return inputMatched && typeMatched
     })
 
