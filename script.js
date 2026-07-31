@@ -1,10 +1,10 @@
 const username_header = document.querySelector(".name")
-const user = JSON.parse(localStorage.getItem("user"))
+let user = JSON.parse(localStorage.getItem("user"))
 const addTransactionBtn = document.querySelector("#openAddModalBtn")
 const txForm = document.querySelector(".add_transaction")
 const closeForm = document.querySelector(".close-modal")
 const form = document.querySelector("#transactionForm");
-const transactionStorageKey = `transactions_${user.username}`
+let transactionStorageKey = `transactions_${user.username}`
 const tableData = document.querySelector("#transactionTableBody")
 const displayBalance = document.querySelector("#displayBalance")
 const displayIncome = document.querySelector("#displayIncome")
@@ -30,7 +30,7 @@ const settingsView = document.querySelector("#settings-view")
 addTransactionBtn.addEventListener("click", () => {
     form.reset()
     editingId = null
-    txForm.style.display = "block"
+    txForm.style.display = "flex"
     txFormBtn.innerText = "Save Transaction"
 })
 
@@ -156,7 +156,7 @@ const updateUi = (dataToShow = transactions) => {
 
     tableData.innerHTML = ""
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    
     const currency = user.currency || "$"
 
     let totalIncome = 0;
@@ -267,7 +267,34 @@ resetBtn.addEventListener("click", () => {
 
 //settings
 
+settingsForm.username.value = user.username
+settingsForm.currency.value = user.currency
 
+settingsForm.addEventListener("submit", (e) => {
+    e.preventDefault()
+    let username = settingsForm.username.value;
+    let currency = settingsForm.currency.value;
+
+    if (username !== user.username) {
+            const newStorageKey = `transactions_${username}`;
+            localStorage.setItem(newStorageKey, JSON.stringify(transactions));
+            localStorage.removeItem(transactionStorageKey); // Clean up old data
+            transactionStorageKey = newStorageKey; // Update active key
+        }
+    const newUser = {
+        username,
+        currency
+    }
+
+    localStorage.setItem("user", JSON.stringify(newUser))
+
+    user = newUser;
+
+    username_header.textContent = user.username;
+
+    alert("Data updated successfully")
+    updateUi()
+})
 
 //filters
 
