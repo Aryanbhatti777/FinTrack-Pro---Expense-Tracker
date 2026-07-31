@@ -3,7 +3,7 @@ const user = JSON.parse(localStorage.getItem("user"))
 const addTransactionBtn = document.querySelector("#openAddModalBtn")
 const txForm = document.querySelector(".add_transaction")
 const closeForm = document.querySelector(".close-modal")
-const form = document.querySelector("form");
+const form = document.querySelector("#transactionForm");
 const transactionStorageKey = `transactions_${user.username}`
 const tableData = document.querySelector("#transactionTableBody")
 const displayBalance = document.querySelector("#displayBalance")
@@ -18,14 +18,34 @@ const searchInput = document.querySelector("#searchInput")
 const searchType = document.querySelector("#typeFilter")
 let chart = null
 let editingId = null
+const dashboardBtn = document.querySelector("#dashboardLink")
+const settingsBtn = document.querySelector("#settingsLink")
+const dashboardView = document.querySelector("#dashboard-view")
+const settingsForm = document.querySelector("#settingsForm")
+const settingsView = document.querySelector("#settings-view")
+
 
 // make transaction form visible and hidden
 
 addTransactionBtn.addEventListener("click", () => {
     form.reset()
     editingId = null
-    txForm.style.display = "flex"
+    txForm.style.display = "block"
     txFormBtn.innerText = "Save Transaction"
+})
+
+dashboardBtn.addEventListener("click", () => {
+    dashboardView.style.display = "block"
+    dashboardBtn.classList.add("active")
+    settingsView.style.display = "none"
+    settingsBtn.classList.remove("active")
+})
+
+settingsBtn.addEventListener("click", () => {
+    settingsView.style.display = "block"
+    settingsBtn.classList.add("active")
+    dashboardView.style.display = "none"
+    dashboardBtn.classList.remove("active")
 })
 
 closeForm.addEventListener("click", () => {
@@ -244,6 +264,10 @@ resetBtn.addEventListener("click", () => {
 
     updateUi()
 })
+
+//settings
+
+
 
 //filters
 
