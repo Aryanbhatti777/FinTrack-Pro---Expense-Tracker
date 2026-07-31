@@ -12,9 +12,11 @@ const displayExpense = document.querySelector("#displayExpense")
 const displayCount = document.querySelector("#displayCount")
 const resetBtn = document.querySelector("#resetDataBtn")
 let transactions = JSON.parse(localStorage.getItem(transactionStorageKey)) || []
+const ctx = document.querySelector("#cashFlowChart")
 
 const searchInput = document.querySelector("#searchInput")
 const searchType = document.querySelector("#typeFilter")
+let chart = null
 
 
 // make transaction form visible and hidden
@@ -161,7 +163,30 @@ tableData.append(tr);
     displayExpense.textContent = `${currency}${totalExpense.toFixed(2)}`
 
     displayCount.textContent = transactions.length
+
+    updateChart(totalIncome, totalExpense)
     
+}
+
+// Chart 
+
+const updateChart = (income, expense) => {
+    if(chart) {chart.destroy()}
+    chart = new Chart(ctx,{
+        type: 'bar',
+        data:{
+            labels: ["Income vs Expense"],
+            datasets: [
+                {label: "Income", data: [income] , backgroundColor: '#166534', borderRadius: 4},
+                {label: "Expense", data:[expense], backgroundColor: '#991b1b', borderRadius: 4}
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: {y: {beignAtZero: true}},
+            plugins: {legend: {position: 'top'}}
+        }
+    })
 }
 
 //reset data
